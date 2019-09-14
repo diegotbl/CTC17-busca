@@ -1,6 +1,5 @@
 from random import uniform, randint
-from math import exp
-from math import pow
+from math import exp, pow
 
 def quad(x, y):
     return (pow(x,2) + pow(y,2))
@@ -13,40 +12,31 @@ def J(neightor):
 def temperature_schedule(i, option):
     if option == 1:
         T_0 = 5.0
-        Beta = 0.05
+        Beta = 0.5
         return T_0/(1+Beta*i)
     else:
         T_0 = 5
-        Beta = 0.01
+        Beta = 0.9
         return T_0*pow(Beta, i)
 
 def random_neighbor(theta):
-    k = randint(1, 4)
-    if k == 1:
-        return (theta[0]+0.1, theta[1])
-    elif k == 2:
-        return (theta[0], theta[1]+ 0.1)
-    elif k == 3:
-        return (theta[0] - 0.1, theta[1])
-    else:
-        return (theta[0] , theta[1]- 0.1)
+    k = uniform(-2.5, 2.5)
+    l = uniform(-2.5, 2.5)
+    return (theta[0]+k, theta[1]+l)
 
 
 def simulated_annealing(theta):
     i = 0
+    maximum = theta
     while True:
         T = temperature_schedule(i, 1)
-        #print(T)
         if T <= 0.00001:
-            return theta
-        neighbor = random_neighbor(theta)
+            if J(maximum) <= J(theta):
 
+                return theta
+            return maximum
+        neighbor = random_neighbor(theta)
         deltaE = J(neighbor) - J(theta)
-        #print(J(neighbor))
-        #print(J(theta))
-        #print(deltaE)
-        #print(neighbor)
-        #print(theta)
         if deltaE > 0.0:
             theta = neighbor
         else:
@@ -55,9 +45,13 @@ def simulated_annealing(theta):
                 theta = neighbor
         i = i+1
 
-        #print(theta)
-
-
 if __name__ == "__main__":
-    theta = (-2,4)
-    print(simulated_annealing(theta))
+    min = 0
+    max = 10
+    for i in range(min, max):
+        x = uniform(-15.0, 15.0)
+        y = uniform(-15.0, 15.0)
+        theta = (x,y)
+        print(theta)
+        maximum = simulated_annealing(theta)
+        print("{0}, {1}".format(maximum, J(maximum)))
