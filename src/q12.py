@@ -26,7 +26,6 @@ def random_neighbor(theta):
 
 def simulated_annealing(theta):
     i = 0
-    maximum = theta
     while True:
         T = temperature_schedule(i)
         if T <= 0.00001:
