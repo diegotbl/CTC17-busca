@@ -9,15 +9,10 @@ def J(neightor):
     y = neightor[1]
     return 4*exp(-quad(x, y)) + exp(-quad(x-5, y-5)) + exp(-quad(x-5, y+5)) + exp(-quad(x+5, y-5)) + exp(-quad(x+5, y+5))
 
-def temperature_schedule(i, option):
-    if option == 1:
-        T_0 = 5.0
-        Beta = 0.5
-        return T_0/(1+Beta*i)
-    else:
-        T_0 = 5
-        Beta = 0.9
-        return T_0*pow(Beta, i)
+def temperature_schedule(i):
+    T_0 = 5.0
+    Beta = 0.5
+    return T_0/(1+Beta*i)
 
 def random_neighbor(theta):
     k = uniform(-2.5, 2.5)
@@ -29,7 +24,7 @@ def simulated_annealing(theta):
     i = 0
     maximum = theta
     while True:
-        T = temperature_schedule(i, 1)
+        T = temperature_schedule(i)
         if T <= 0.00001:
             if J(maximum) <= J(theta):
 
