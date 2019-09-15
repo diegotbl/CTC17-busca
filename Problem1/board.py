@@ -1,4 +1,4 @@
-from random import randrange
+from random import shuffle
 
 
 def print_board(queen_pos):
@@ -21,9 +21,8 @@ def random_board(board_size):
     """
     Generates a random board of size 'board_size'. Returns the list of queens' positions
     """
-    queen_pos = []
+    queen_pos = list(range(board_size))
 
-    for i in range(board_size):
-        queen_pos.append(randrange(board_size))
+    shuffle(queen_pos)
 
     return queen_pos

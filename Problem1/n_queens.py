@@ -6,8 +6,11 @@ def n_queens(board_size):
     """
     Solves the N Queens puzzle for a 'board_size' sized board using Random Restart Hill Climbing algorithm
     """
+    generated_boards = 0
+
     while True:
         queen_pos = board.random_board(board_size)
+        generated_boards += 1
         last_number_attacks = 0
 
         # if 'last_number_attacks' equals the current heuristic means no movement was made
@@ -15,14 +18,17 @@ def n_queens(board_size):
         while last_number_attacks != attacking_queens(queen_pos):
             last_number_attacks = attacking_queens(queen_pos)
             for x_queen, y_queen in enumerate(queen_pos):
-                # 'test_queen_pos' will be used for testing all possibilities for minimizing heuristic
-                test_queen_pos = deepcopy(queen_pos)
-                for i in range(board_size):
-                    test_queen_pos[x_queen] = i
-                    if attacking_queens(test_queen_pos) < attacking_queens(queen_pos):
-                        queen_pos[x_queen] = i
+                for x_another_queen, y_another_queen in enumerate(queen_pos):
+                    test_queen_pos = deepcopy(queen_pos)
+                    if y_another_queen != y_queen:        # try to permute columns
+                        test_queen_pos[x_another_queen] = queen_pos[x_queen]
+                        test_queen_pos[x_queen] = queen_pos[x_another_queen]
+                        if attacking_queens(test_queen_pos) < attacking_queens(queen_pos):
+                            for i in range(board_size):
+                                queen_pos[i] = test_queen_pos[i]
+                            y_queen = y_another_queen
                 if attacking_queens(queen_pos) == 0:
-                    return queen_pos
+                    return queen_pos, generated_boards
 
 
 def attacking_queens(queen_pos):
